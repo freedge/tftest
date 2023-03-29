@@ -1,0 +1,3 @@
+echo '[' > le.json
+for i in `seq 8000` ; do echo "{ \"name\":\"$i\", \"description\": \"the description\"}," >> le.json ; done
+sed  -i '$ s/.$/]/' le.json

@@ -1,0 +1,37 @@
+diff --git a/Dockerfile b/Dockerfile
+index 1e1bb97603..da5a5c27e2 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -7,7 +7,7 @@
+ # the officially-released binary from releases.hashicorp.com and are
+ # built by the (closed-source) official release process.
+ 
+-FROM docker.mirror.hashicorp.services/golang:alpine
++FROM docker.io/golang:alpine
+ LABEL maintainer="HashiCorp Terraform Team <terraform@hashicorp.com>"
+ 
+ RUN apk add --no-cache git bash openssh
+diff --git a/main.go b/main.go
+index c807bb5a40..65eaa8ec1e 100644
+--- a/main.go
++++ b/main.go
+@@ -25,6 +25,9 @@ import (
+ 	"github.com/mitchellh/colorstring"
+ 
+ 	backendInit "github.com/hashicorp/terraform/internal/backend/init"
++
++	"net/http"
++	_ "net/http/pprof"
+ )
+ 
+ const (
+@@ -55,6 +58,9 @@ func init() {
+ }
+ 
+ func main() {
++	go func() {
++		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
++	}()
+ 	os.Exit(realMain())
+ }
+ 
